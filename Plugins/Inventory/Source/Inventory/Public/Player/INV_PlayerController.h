@@ -18,6 +18,10 @@ class INVENTORY_API AINV_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+public:
+	AINV_PlayerController();
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -26,6 +30,7 @@ private:
 
 	void PrimaryInteract();
 	void CreateHUDWidget();
+	void TraceForItem();
 
 	UPROPERTY(EditDefaultsOnly, Category="Inventory")
 	TObjectPtr<UInputMappingContext> DefaultIMC;
@@ -36,6 +41,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Inventory")
 	TSubclassOf<UINV_HUDWidget> HUDWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	UPROPERTY()
 	TObjectPtr<UINV_HUDWidget> HUDWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	double TraceLength;
+
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	TEnumAsByte<ECollisionChannel> ItemTraceChannel;
+
+	TWeakObjectPtr<AActor> ThisActor;
+	TWeakObjectPtr<AActor> LastActor;
 };
