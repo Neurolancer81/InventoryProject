@@ -2,11 +2,49 @@
 
 
 #include "Player/INV_PlayerController.h"
-#include "Inventory.h"
+
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Widgets/HUD/INV_HUDWidget.h"
+
 
 void AINV_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogInventory, Log, TEXT("AINV_PlayerController::BeginPlay"));	
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+
+	if(IsValid(Subsystem))
+	{
+		Subsystem->AddMappingContext(DefaultIMC, 0);
+	}
+
+	CreateHUDWidget();
+}
+
+void AINV_PlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Started,
+		this, &AINV_PlayerController::PrimaryInteract);
+}
+
+void AINV_PlayerController::PrimaryInteract()
+{
+	UE_LOG(LogTemp, Log, TEXT(" PrimaryInteract"));
+}
+
+void AINV_PlayerController::CreateHUDWidget()
+{
+	if (!IsLocalController()) return;
+	HUDWidget = CreateWidget<UINV_HUDWidget>(this, HUDWidgetClass);
+
+	if (IsValid(HUDWidget))
+	{
+		HUDWidget->AddToViewport();
+	}
+	
 }
