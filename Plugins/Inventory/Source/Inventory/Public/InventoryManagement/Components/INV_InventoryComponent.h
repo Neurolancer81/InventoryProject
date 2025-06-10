@@ -7,7 +7,11 @@
 #include "INV_InventoryComponent.generated.h"
 
 
+class UINV_ItemComponent;
 class UINV_InventoryBase;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInventoryItemChange, UINV_InventoryItem*, Item);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNoRoomInInventory);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class INVENTORY_API UINV_InventoryComponent : public UActorComponent
@@ -18,7 +22,14 @@ public:
 	
 	UINV_InventoryComponent();
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory", BlueprintAuthorityOnly)
+	void TryAddItem(UINV_ItemComponent* ItemComponent);
+
 	void ToggleInventoryMenu();
+
+	FInventoryItemChange OnItemAdded;
+	FInventoryItemChange OnItemRemoved;
+	FNoRoomInInventory NoRoomInInventory;
 
 protected:
 	

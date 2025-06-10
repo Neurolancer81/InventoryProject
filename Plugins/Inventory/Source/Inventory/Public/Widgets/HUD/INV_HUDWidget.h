@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "INV_HUDWidget.generated.h"
 
+class UINV_InfoMessage;
 /**
  * 
  */
@@ -16,10 +17,19 @@ class INVENTORY_API UINV_HUDWidget : public UUserWidget
 
 public:
 
+	virtual void NativeOnInitialized() override;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Inventory")
 	void ShowPickupMessage(const FString& Message);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Inventory")
 	void HidePickupMessage();
-	
+
+private:
+
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<UINV_InfoMessage> InfoMessage;
+
+	UFUNCTION()
+	void OnNoRoom();
 };

@@ -64,7 +64,12 @@ void AINV_PlayerController::SetupInputComponent()
 
 void AINV_PlayerController::PrimaryInteract()
 {
-	UE_LOG(LogTemp, Log, TEXT(" PrimaryInteract"));
+	if(!ThisActor.IsValid()) return;
+
+	UINV_ItemComponent* ItemComponent = ThisActor->GetComponentByClass<UINV_ItemComponent>();
+	if(ItemComponent == nullptr || !InventoryComponent.IsValid()) return;
+
+	InventoryComponent->TryAddItem(ItemComponent);
 }
 
 void AINV_PlayerController::CreateHUDWidget()
